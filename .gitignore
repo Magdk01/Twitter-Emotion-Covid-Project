@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#CSV files and data set
+preprocessing/raw_data/
+preprocessing/preprocessed_year_data/
+
+# Personal Files
+Mvin_sandbox.ipynb
