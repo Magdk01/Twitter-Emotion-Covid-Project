@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 #CSV files and data set
+.csv
 preprocessing/raw_data/
 preprocessing/preprocessed_year_data/
 
