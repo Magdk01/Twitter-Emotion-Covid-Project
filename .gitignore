@@ -130,8 +130,7 @@ dmypy.json
 
 #CSV files and data set
 .csv
-preprocessing/raw_data/
-preprocessing/preprocessed_year_data/
-
+*.hf
+*.csv
 # Personal Files
 Mvin_sandbox.ipynb
