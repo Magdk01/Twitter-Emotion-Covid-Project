@@ -1,5 +1,4 @@
 from transformers import pipeline
-from transformers import pipeline
 import pandas as pd
 import tqdm
 import os
@@ -33,9 +32,7 @@ if __name__ == '__main__':
     tqdm.tqdm.pandas()
 
     MODEL = f"cardiffnlp/twitter-roberta-base-sentiment-latest"
-
-
-    sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0)
+    sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0,truncation=True,max_length=512)
     print('pipeline loaded')
 
 
