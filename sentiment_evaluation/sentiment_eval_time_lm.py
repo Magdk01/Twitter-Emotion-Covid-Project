@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     df_subset['sentiment'] = df_subset['text'].progress_apply(sentiment_for_df)
 
-    filename = f'sentiment_subsample_{subset_range[0]}_{subset_range[1]}.csv'
+    filename = f'sentiment_subsample_{MODEL}_{DATASET}.csv'
     df_subset.to_csv(f'{filename}')
 
     print(f'{filename} saved')
