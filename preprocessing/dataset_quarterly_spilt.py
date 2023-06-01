@@ -1,6 +1,7 @@
 import os
 import sys
 import pandas as pd
+from tqdm import tqdm
 
 DATASET = sys.argv[1] # the is the endpath for the data set e.g. "validation_split.csv"
 try:
@@ -10,15 +11,15 @@ except IndexError:
 
 YEARS = [2018, 2019, 2020, 2021, 2022]
 
-if not (cwd:=os.getcwd().split('\\')[-1]) == 'Twitter-Emotion-Covid-Project':
-    os.chdir('\\'.join(os.getcwd().split('\\')[:-1]))
-    assert os.getcwd().split('\\')[-1] == 'Twitter-Emotion-Covid-Project', 'Working directory is wrong'
-print(f'Parent folder is set to: {os.getcwd()}')
+
+try:
+    data = pd.read_csv(f"{DATASET}",index_col=0,dtype={'text':str})
+except:
+    raise NameError(f'{DATASET} not found')
 
 if not os.path.isdir(TARGET_FOLDER):
     os.mkdir(TARGET_FOLDER)
 
-data = pd.read_csv(f"preprocessing/splits/{DATASET}")
 
 if "date" not in list(data.columns):
     raise ValueError("No date column, please name this 'date' :)")
@@ -27,9 +28,10 @@ data['date'] = pd.to_datetime(data.date)
 data['year'] = data.date.dt.year
 data['quarter'] = data.date.dt.quarter
 
-for year in YEARS:
-    for quarter in range(1,5):
-        current_data = data[(data['year'] == year) & (data['quarter'] == quarter)]
-        current_data.to_csv(f"{TARGET_FOLDER}/quarterly_data_{year}_Q{quarter}.csv")
 
+for year in YEARS:
+    print(f'\nYear: {year}')
+    for quarter in tqdm(range(1,5)):
+        current_data = data[(data['year'] == year) & (data['quarter'] == quarter)].drop(['year','quarter'],axis=1)
+        current_data.to_csv(f"{TARGET_FOLDER}/quarterly_data_{year}_Q{quarter}.csv")
 
