@@ -42,46 +42,43 @@ For the "MODEL" parameter use one of:
     
 """
 
-
 #Sets the cache folder for the transformer models on the HPC's HOME drive
 os.environ['TRANSFORMERS_CACHE'] = './cache/'
 
-if __name__ == '__main__':
-    
-    DATASET = sys.argv[1]
-    MODEL = sys.argv[2] # See above for example
+DATASET = sys.argv[1]
+MODEL = sys.argv[2] # See above for example
 
-    if torch.cuda.is_available():
-        device = torch.device("cuda:0")
-        print(f'Using Cuda device: {device}\n')
-    else:    
-        raise RuntimeError('No CUDA available')
-    
-    assert len(sys.argv) == 3, 'Script needs a upper and lower limit'
+if torch.cuda.is_available():
+    device = torch.device("cuda:0")
+    print(f'Using Cuda device: {device}\n')
+else:    
+    raise RuntimeError('No CUDA available')
 
-    lower_limit = int(sys.argv[1])
-    upper_limit = int(sys.argv[2])
+assert len(sys.argv) == 3, 'Script needs a upper and lower limit'
 
-    assert lower_limit < upper_limit, 'First limit must be the lowest'
+lower_limit = int(sys.argv[1])
+upper_limit = int(sys.argv[2])
 
-    print(f'Will look in range:\n{lower_limit}:{upper_limit}')
+assert lower_limit < upper_limit, 'First limit must be the lowest'
 
-    subset_range = (lower_limit,upper_limit)
-    tqdm.tqdm.pandas()
+print(f'Will look in range:\n{lower_limit}:{upper_limit}')
 
-    sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0)
-    print('pipeline loaded')
+subset_range = (lower_limit,upper_limit)
+tqdm.tqdm.pandas()
 
-    print('reading dataset...')
-    df = pd.read_csv(DATASET,index_col=0)
-    print('df read')
-    
-    df_subset = df.copy()[subset_range[0]:subset_range[1]]
-    del df
+sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0)
+print('pipeline loaded')
 
-    df_subset['sentiment'] = df_subset['text'].progress_apply(sentiment_for_df)
+print('reading dataset...')
+df = pd.read_csv(DATASET,index_col=0)
+print('df read')
 
-    filename = f'sentiment_subsample_{MODEL}_{DATASET}.csv'
-    df_subset.to_csv(f'{filename}')
+df_subset = df.copy()[subset_range[0]:subset_range[1]]
+del df
 
-    print(f'{filename} saved')
+df_subset['sentiment'] = df_subset['text'].progress_apply(sentiment_for_df)
+
+filename = f'sentiment_subsample_{MODEL}_{DATASET}.csv'
+df_subset.to_csv(f'{filename}')
+
+print(f'{filename} saved')
