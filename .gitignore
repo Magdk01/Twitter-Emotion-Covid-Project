@@ -134,3 +134,4 @@ dmypy.json
 *.csv
 # Personal Files
 Mvin_sandbox.ipynb
+sentiment_eval_quarter
