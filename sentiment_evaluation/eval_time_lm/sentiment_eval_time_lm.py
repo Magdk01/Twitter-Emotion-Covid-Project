@@ -6,16 +6,6 @@ import os
 import torch
 import sys
 
-def sentiment_for_df(text):
-    classification = sentiment_task(text)[0]['label']
-
-    if classification =='negative':
-        return -1
-    elif classification =='neutral':
-        return 0
-    elif classification =='positive':
-        return 1
-
 """
 For the "MODEL" parameter use one of:
     cardiffnlp/twitter-roberta-base-sentiment-latest
@@ -55,30 +45,30 @@ else:
     raise RuntimeError('No CUDA available')
 
 assert len(sys.argv) == 3, 'Script needs a upper and lower limit'
-
-lower_limit = int(sys.argv[1])
-upper_limit = int(sys.argv[2])
-
-assert lower_limit < upper_limit, 'First limit must be the lowest'
-
-print(f'Will look in range:\n{lower_limit}:{upper_limit}')
-
-subset_range = (lower_limit,upper_limit)
 tqdm.tqdm.pandas()
 
-sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0)
+sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0,truncation=True,max_length=512)
 print('pipeline loaded')
 
 print('reading dataset...')
 df = pd.read_csv(DATASET,index_col=0)
 print('df read')
 
-df_subset = df.copy()[subset_range[0]:subset_range[1]]
-del df
+def sentiment_for_df(text):
+	classification = sentiment_task(text)[0]['label']
 
-df_subset['sentiment'] = df_subset['text'].progress_apply(sentiment_for_df)
+	if classification =='negative':
+		return -1
+	elif classification =='neutral':
+		return 0
+	elif classification =='positive':
+		return 1
+	else:
+		return classification
+		
+df['sentiment'] = df['text'].progress_apply(sentiment_for_df)
 
-filename = f'sentiment_subsample_{MODEL}_{DATASET}.csv'
-df_subset.to_csv(f'{filename}')
+filename = f'sentiment_subsample_{MODEL.split("/")[-1]}_{DATASET}.csv'
+df.to_csv(f'{filename}')
 
 print(f'{filename} saved')

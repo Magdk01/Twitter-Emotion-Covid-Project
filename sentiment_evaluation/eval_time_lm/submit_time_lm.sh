@@ -5,7 +5,7 @@
 #BSUB -q gpuv100
 #BSUB -gpu "num=1:mode=exclusive_process"
 #BSUB -n 1
-#BSUB -R "rusage[mem=6GB]"
+#BSUB -R "rusage[mem=3GB]"
 #BSUB -R "span[hosts=1]"
 #BSUB -W 01:00
 #BSUB -N
@@ -18,6 +18,9 @@
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
-source test-env/bin/activate
+source twitter_venv/bin/activate
 
-python time_lm_masterscript.py
+datafile=$1
+model=$2
+
+python3 "sentiment_eval_time_lm.py" $datafile $model
