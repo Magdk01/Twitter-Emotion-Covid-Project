@@ -1,5 +1,4 @@
 from transformers import pipeline
-from transformers import pipeline
 import pandas as pd
 import tqdm
 import os
@@ -35,7 +34,7 @@ For the "MODEL" parameter use one of:
 #Sets the cache folder for the transformer models on the HPC's HOME drive
 os.environ['TRANSFORMERS_CACHE'] = './cache/'
 
-DATASET = sys.argv[1]
+DATASET = f"{sys.argv[1]}.csv"
 MODEL = sys.argv[2] # See above for example
 
 if torch.cuda.is_available():
@@ -44,14 +43,13 @@ if torch.cuda.is_available():
 else:    
     raise RuntimeError('No CUDA available')
 
-assert len(sys.argv) == 3, 'Script needs a upper and lower limit'
 tqdm.tqdm.pandas()
 
 sentiment_task = pipeline("sentiment-analysis", model=MODEL, tokenizer=MODEL,device=0,truncation=True,max_length=512)
 print('pipeline loaded')
 
 print('reading dataset...')
-df = pd.read_csv(DATASET,index_col=0)
+df = pd.read_csv(f'{DATASET}',index_col=0)
 print('df read')
 
 def sentiment_for_df(text):
@@ -68,7 +66,8 @@ def sentiment_for_df(text):
 		
 df['sentiment'] = df['text'].progress_apply(sentiment_for_df)
 
-filename = f'sentiment_subsample_{MODEL.split("/")[-1]}_{DATASET}.csv'
+filename = f'./sentiment_subsample_{MODEL.split("/")[-1]}_{DATASET.split("/")[-1]}'
+print(filename)
 df.to_csv(f'{filename}')
 
 print(f'{filename} saved')
