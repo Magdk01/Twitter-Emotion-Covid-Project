@@ -30,4 +30,3 @@ for file in datafiles:
         os.system(f"python sentiment_eval_time_lm.py {name}.csv {time_lms[stamp]}")
         os.system(f"python sentiment_eval_time_lm.py {name}.csv {models[0]}")
         os.system(f"python sentiment_eval_time_lm.py {name}.csv {models[1]}")
-        
