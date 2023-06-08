@@ -132,6 +132,9 @@ dmypy.json
 .csv
 *.hf
 *.csv
+*.bin
+*.json
+
 # Personal Files
 Mvin_sandbox.ipynb
 sentiment_eval_quarter
