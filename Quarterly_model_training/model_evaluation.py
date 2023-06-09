@@ -1,4 +1,4 @@
-from transformers import AutoModelForMaskedLM, AutoTokenizer, pipeline
+from transformers import AutoModelForMaskedLM, AutoTokenizer
 import torch
 import pandas as pd 
 import numpy as np
@@ -15,13 +15,11 @@ def model_evaluation(dataset, model_path = False, tweeteval = "cardiffnlp/twitte
 
     validation_set = list(pd.read_csv(dataset, header = 0, delimiter=",")['text'])
 
-    encoded_inputs = tokenizer(validation_set, truncation=True, padding=True, return_tensors="pt")
+    encoded_inputs = tokenizer(validation_set, truncation=True, padding=True, return_tensors="pt", )
     labels = encoded_inputs.input_ids.clone()
-    
-    sentiment_task = pipeline("fill-mask", model=model, tokenizer=tokenizer,device=0,truncation=True,max_length=512)
 
     with torch.no_grad():
-        outputs = sentiment_task(**encoded_inputs, labels=labels)
+        outputs = model(**encoded_inputs, labels=labels)
 
     for i, sentence in enumerate(outputs.logits):
         correctness = np.sum([labels[i][j] == np.argmax(sentence[j]) for j in range(len(sentence))])
