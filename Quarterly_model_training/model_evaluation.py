@@ -15,7 +15,7 @@ def model_evaluation(dataset, model_path = False, tweeteval = "cardiffnlp/twitte
     model = AutoModelForMaskedLM.from_pretrained(model_path)
     tokenizer = AutoTokenizer.from_pretrained(tweeteval)
 
-    validation_set = list(fix_dataset(pd.read_csv(dataset, header = 0, delimiter=","))['text'])[:10]
+    validation_set = list(fix_dataset(pd.read_csv(dataset, header = 0, delimiter=","))['text'])
 
     encoded_inputs = tokenizer(validation_set, truncation=True, padding=True, return_tensors="pt")
     labels = encoded_inputs.input_ids.clone()
@@ -27,3 +27,6 @@ def model_evaluation(dataset, model_path = False, tweeteval = "cardiffnlp/twitte
     loss = outputs.loss
 
     return loss.item()
+
+if __name__ == "__main__":
+    model_evaluation("./preprocessing/splits/validation_split.csv")
