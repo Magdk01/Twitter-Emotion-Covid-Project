@@ -19,6 +19,8 @@ module load cuda/11.7
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
+
+# NOTE: FRANK is the name of venv, replace with the name of ur venv
 source FRANK/bin/activate
 
 python first_TIMELM.py
