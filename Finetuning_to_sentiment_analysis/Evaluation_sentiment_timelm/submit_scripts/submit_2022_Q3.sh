@@ -21,4 +21,4 @@ module load cuda/11.7
 # NOTE: needs to have been built with the same SciPy version above!
 source FRANK/bin/activate
 
-python "sentiment_eval_time_lm.py" "data/quarterly_data_2022_Q3" "sentiment/best_model_10"
+python "sentiment_eval_time_lm.py" "data/quarterly_data_2022_Q3" "sentiment/base_model_10"
