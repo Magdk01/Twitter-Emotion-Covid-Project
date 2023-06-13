@@ -1,12 +1,20 @@
 import os
-import transformers
 from transformers import AutoModelForMaskedLM,Trainer, TrainingArguments,AutoTokenizer
 import wandb
 from datasets import load_dataset
 from transformers import DataCollatorForLanguageModeling
+import sys
+import re
 
 
 if __name__ == "__main__":
+
+    model, year_quarter, conti_nue = sys.argv[1], sys.argv[2], sys.argv[3]
+
+    assert re.search("\d{4}_Q\d",year_quarter).group(0), 'Doesnt recognize'
+
+
+
     print('Import done')
 
     os.environ["WANDB_PROJECT"]="TwitterEmotions"
@@ -14,9 +22,9 @@ if __name__ == "__main__":
     os.environ["WANDB_WATCH"]="false"
     os.environ['TOKENIZERS_PARALLELISM']="false"
 
-    model_checkpoint = "cardiffnlp/twitter-roberta-base-dec2020"
+    model_checkpoint = f"cardiffnlp/{model}"
 
-    datasets = load_dataset("csv", data_files='2020_Q4_text_only_full_train.csv')
+    datasets = load_dataset("csv", data_files=f'text_only_splits/{year_quarter}_train_text_only.csv')
     print('Dataset loaded')
 
     train_size = int(len(datasets['train'])*0.10)
@@ -60,9 +68,13 @@ if __name__ == "__main__":
         batch_size=1000,
     )
 
-    model = AutoModelForMaskedLM.from_pretrained(model_checkpoint)
-
-    name_of_model = "Train_2020_Q4"
+    
+    if conti_nue == "continue":
+        model = AutoModelForMaskedLM.from_pretrained(f'Train_{year_quarter}',local_files_only=True)
+    else:
+        model = AutoModelForMaskedLM.from_pretrained(model_checkpoint)
+        
+    name_of_model = f"Train_{year_quarter}"
 
     training_args = TrainingArguments(
         f"{name_of_model}",
@@ -72,8 +84,9 @@ if __name__ == "__main__":
         report_to="wandb",
         run_name= f"{name_of_model}",
         # push_to_hub=True,
-        num_train_epochs = 10,
+        num_train_epochs = 20,
         per_device_train_batch_size  = 12,
+        save_strategy="no"
     )
 
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm_probability=0.15)
