@@ -8,27 +8,47 @@ import sys
 import re
 # Define tokenizer and model
 
-model, year_quarter= sys.argv[1], sys.argv[2]
-assert re.search("\d{4}_Q\d",year_quarter).group(0), 'Doesnt recognize'
+torch.maunal_seed(42)
+np.random.seed(42)
 
-tokenizer = RobertaTokenizerFast.from_pretrained(f"cardiffnlp/{model}")
-model1 = RobertaForMaskedLM.from_pretrained(f"cardiffnlp/{model}")
-model2 = RobertaForMaskedLM.from_pretrained('Train_2021_Q3',local_files_only = True)
+time_lms = {
+	"2019_Q4": "cardiffnlp/twitter-roberta-base-2019-90m",
+	"2020_Q1": "cardiffnlp/twitter-roberta-base-mar2020",
+	"2020_Q2": "cardiffnlp/twitter-roberta-base-jun2020",
+	"2020_Q3": "cardiffnlp/twitter-roberta-base-sep2020",
+	"2020_Q4": "cardiffnlp/twitter-roberta-base-dec2020",
+	"2021_Q1": "cardiffnlp/twitter-roberta-base-mar2021",
+	"2021_Q2": "cardiffnlp/twitter-roberta-base-jun2021",
+	"2021_Q3": "cardiffnlp/twitter-roberta-base-sep2021",
+	"2021_Q4": "cardiffnlp/twitter-roberta-base-dec2021",
+	"2022_Q1": "cardiffnlp/twitter-roberta-base-mar2022",
+	"2022_Q2": "cardiffnlp/twitter-roberta-base-jun2022",
+	"2022_Q3": "cardiffnlp/twitter-roberta-base-sep2022",
+	"2022_Q4": "cardiffnlp/twitter-roberta-base-2022-154m",
+}
+
+
+stamp = sys.argv[1]
+model = time_lms[stamp]
+
+tokenizer = RobertaTokenizerFast.from_pretrained(model)
+model1 = RobertaForMaskedLM.from_pretrained(model)
+model2 = RobertaForMaskedLM.from_pretrained(f"Train_{stamp}",local_files_only = True)
 
 # Move models to GPU if CUDA is available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0")
 model1 = model1.to(device)
 model2 = model2.to(device)
 
 # Load the dataframe
-df_main = pd.read_csv(f"validation_splits/{year_quarter}_validation_text_only.csv",index_col=0)
+df_main = pd.read_csv(f"data/quarterly_data_{stamp}.csv",usecols=['text'])
 data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
 perplexity_list1 = []
 perplexity_list2 = []
 loss_fct = torch.nn.CrossEntropyLoss()
 
 def model_perplex(model, inputs):
-    model = model.eval() 
+    model = model.eval()
     with torch.no_grad():
         outputs = model(**inputs)
 
