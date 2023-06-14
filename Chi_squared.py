@@ -50,7 +50,7 @@ cpostimelm =  []
 pprepost = []
 ppretimelm = []
 pposttimelm = []
-i = 0
+
 for j in range(3):
     if j == 0:
         filesm1 = filespre
@@ -74,7 +74,7 @@ for j in range(3):
         p = []
         filesm1 = filestimelm
         filesm2 = filespost
-    for name in filesm1:
+    for i,name in enumerate(filesm1):
         
         # load data of model 1
         df1 = pd.read_csv(name)
@@ -86,27 +86,27 @@ for j in range(3):
         
         v1 = df1.iloc[:, -1].values
         if v1[0] != -1 and v1[0] !=0 and v1[0] !=0:
-            i = 0
+            b = 0
             for v in v1:
                 if v == 'LABEL_0':
-                    v1[i] = int(-1)
+                    v1[b] = int(-1)
                 elif v == 'LABEL_1':
-                    v1[i] = int(0)
+                    v1[b] = int(0)
                 else:
-                    v1[i] = int(1)
-                i += 1
+                    v1[b] = int(1)
+                b += 1
         #put into vector
         v2 = df2.iloc[:, -1].values
         if v2[0] != -1 and v2[0] !=0 and v2[0] !=0:
-            i = 0
+            b = 0
             for v in v2:
                 if v == 'LABEL_0':
-                    v2[i] = int(-1)
+                    v2[b] = int(-1)
                 elif v == 'LABEL_1':
-                    v2[i] = int(0)
+                    v2[b] = int(0)
                 else:
-                    v2[i] = int(1)
-                i += 1
+                    v2[b] = int(1)
+                b += 1
         
         
         
@@ -126,14 +126,14 @@ for j in range(3):
         # chisquared test
         
         contingency_table = np.zeros((2, 3), dtype=int)
-        for i in range(len(v1)+len(v2)):
+        for a in range(len(v1)+len(v2)):
             
-            if i < len(v1):
+            if a < len(v1):
                 row = 0
-                col = v1[i]
+                col = v1[a]
             else:
                 row = 1
-                col = v2[i-len(v1)]
+                col = v2[a-len(v1)]
             contingency_table[row][col] += 1
         
         chi2, p_value, dof, expected = chi2_contingency(contingency_table)
@@ -141,6 +141,6 @@ for j in range(3):
         p.append(p_value)
         #print(f"Chi-square statistic: {chi2}")
         #print(f"P-value: {p_value}")
-        i += 1
+        
 cposttimelm = c
 pposttimelm = p
