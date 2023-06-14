@@ -23,4 +23,4 @@ module load cuda/11.7
 # NOTE: FRANK is the name of venv, replace with the name of ur venv
 source FRANK/bin/activate
 
-python first_TIMELM.py
+python Finetuning_without_parametersearch.py
