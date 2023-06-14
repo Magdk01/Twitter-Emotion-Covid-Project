@@ -23,4 +23,4 @@ module load cuda/11.7
 # NOTE: replace "FRANK" with name of venv
 source FRANK/bin/activate
 
-python test.py
+python Finetuning_with_Parametersearch.py
