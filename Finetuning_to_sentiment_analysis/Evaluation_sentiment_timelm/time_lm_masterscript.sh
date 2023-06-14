@@ -1,6 +1,5 @@
 #!/bin/sh
 FILES=(
-    "2019_Q4"
     "2020_Q1"
     "2020_Q2"
     "2020_Q3"
@@ -12,7 +11,6 @@ FILES=(
     "2022_Q1"
     "2022_Q2"
     "2022_Q3"
-    "2022_Q4"
 )
 for stamp in ${FILES[@]}; do
 
@@ -23,7 +21,7 @@ for stamp in ${FILES[@]}; do
         continue
     fi
 
-    bsub -W 01:00 < "submit_scripts/submit_${stamp}.sh"
+    bsub -W 05:00 < "submit_scripts/submit_${stamp}.sh"
     ###bsub -W 01:00 < "submit_scripts/submit_${stamp}_pre.sh"
     ###bsub -W 01:00 < "submit_scripts/submit_${stamp}_post.sh"
 done
