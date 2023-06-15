@@ -53,6 +53,7 @@ pposttimelm = []
 c = []
 p = []
 
+
 for j in range(3):
     if j == 0:
         filesm1 = filespre
@@ -77,6 +78,7 @@ for j in range(3):
         filesm1 = filestimelm
         filesm2 = filespost
    #loop that does the chi-squared test
+
     for i,name in enumerate(filesm1):
         
         # load data of model 1
@@ -90,6 +92,7 @@ for j in range(3):
         #we had to change these to integers, they have to be integers to fit into chi-squared later
         v1 = df1.iloc[:, -1].values
         if v1[0] != -1 and v1[0] !=0 and v1[0] !=1 and ('roberta' in name):
+
             b = 0
             for v in v1:
                 if v == 'LABEL_0':
@@ -99,6 +102,7 @@ for j in range(3):
                 else:
                     v1[b] = int(1)
                 b += 1
+
         
         #issue in timelm not being the three integers but instead a dictionary.
         if v1[0] != -1 and v1[0] !=0 and v1[0] !=1 and ('model' in name):
@@ -116,6 +120,7 @@ for j in range(3):
         v2 = df2.iloc[:, -1].values
         #same issue as earlier with premodels
         if v2[0] != -1 and v2[0] !=0 and v2[0] !=1:
+
             b = 0
             for v in v2:
                 if v == 'LABEL_0':
@@ -125,6 +130,7 @@ for j in range(3):
                 elif v == 'LABEL_2':
                     v2[b] = int(1)
                 b += 1
+
         
         # chisquared test
                 
@@ -142,10 +148,12 @@ for j in range(3):
                 col = v2[a-len(v1)]+1
             row = int(row)
             col = int(col)
+
             contingency_table[row][col] += 1
             
         chi2, p_value, dof, expected = chi2_contingency(contingency_table)
         c.append(chi2)
         p.append(p_value)
+
 cposttimelm = c
 pposttimelm = p
