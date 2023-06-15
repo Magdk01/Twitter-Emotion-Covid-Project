@@ -24,25 +24,25 @@ filespre = ['sentiment_subsample_twitter-roberta-base-sentiment_quarterly_data_2
          ]
 
 
-filespost = ['sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2018_Q1',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2018_Q2','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2018_Q3',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2018_Q4','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2019_Q1',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2019_Q2','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2019_Q3',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2019_Q4','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2020_Q1',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2020_Q2','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2020_Q3',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2020_Q4','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2021_Q1',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2021_Q2','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2021_Q3',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2021_Q4','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2022_Q1',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2022_Q2','sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2022_Q3',
-         'sentiment_subsample_twitter-roberta-base-sentiment_latest_quarterly_data_2022_Q4'
+filespost = ['sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2018_Q1',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2018_Q2','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2018_Q3',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2018_Q4','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2019_Q1',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2019_Q2','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2019_Q3',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2019_Q4','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2020_Q1',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2020_Q2','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2020_Q3',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2020_Q4','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2021_Q1',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2021_Q2','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2021_Q3',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2021_Q4','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2022_Q1',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2022_Q2','sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2022_Q3',
+         'sentiment_subsample_twitter-roberta-base-sentiment-latest_quarterly_data_2022_Q4'
          ]
 
-filestimelm = ['sentiment_subsample_model_0_quarterly_data_2020_Q1',
-         'sentiment_subsample_model_1_quarterly_data_2020_Q2','sentiment_subsample_model_2_quarterly_data_2020_Q3',
-         'sentiment_subsample_model_3_quarterly_data_2020_Q4','sentiment_subsample_model_4_quarterly_data_2021_Q1',
-         'sentiment_subsample_model_5_quarterly_data_2021_Q2','sentiment_subsample_model_6_quarterly_data_2021_Q3',
-         'sentiment_subsample_model_7_quarterly_data_2021_Q4','sentiment_subsample_model_8_quarterly_data_2022_Q1',
-         'sentiment_subsample_model_9_quarterly_data_2022_Q2','sentiment_subsample_model_10_quarterly_data_2022_Q3'
+filestimelm = ['sentiment_subsample_base_model_0_quarterly_data_2020_Q1',
+         'sentiment_subsample_base_model_1_quarterly_data_2020_Q2','sentiment_subsample_base_model_2_quarterly_data_2020_Q3',
+         'sentiment_subsample_base_model_3_quarterly_data_2020_Q4','sentiment_subsample_base_model_4_quarterly_data_2021_Q1',
+         'sentiment_subsample_base_model_5_quarterly_data_2021_Q2','sentiment_subsample_base_model_6_quarterly_data_2021_Q3',
+         'sentiment_subsample_base_model_7_quarterly_data_2021_Q4','sentiment_subsample_base_model_8_quarterly_data_2022_Q1',
+         'sentiment_subsample_base_model_9_quarterly_data_2022_Q2','sentiment_subsample_base_model_10_quarterly_data_2022_Q3'
          ]
 cprepost =  []
 cpretimelm =  []
@@ -50,11 +50,18 @@ cpostimelm =  []
 pprepost = []
 ppretimelm = []
 pposttimelm = []
-i = 0
+c = []
+p = []
+all_contingency_table = np.zeros((2, 3), dtype=int)
+
+#looping over the three chi-squared test we want to do
 for j in range(3):
+    #adds the first two models as filesm1 and filesm2
     if j == 0:
         filesm1 = filespre
         filesm2 = filespost
+    #first it removes the quarters that are not in timelm models as these only stretch for 11 quarters and not 20
+    #it also saves the c and p in a different name such that we can find these results
     elif j == 1:
         for g in range(8):
             filespre.remove(filespre[0])
@@ -74,73 +81,80 @@ for j in range(3):
         p = []
         filesm1 = filestimelm
         filesm2 = filespost
-    for name in filesm1:
+    #loop that does the chi-squared test
+    for i,name in enumerate(filesm1):
         
         # load data of model 1
-        df1 = pd.read_csv(name)
+        df1 = pd.read_csv(name+'.csv')
         
         # load data of model 2
-        df2 = pd.read_csv(filesm2[i])
+        df2 = pd.read_csv(filesm2[i]+'.csv')
         
         #put into vector
-        
+        #due to all the premodels having LABEL_0, LABEL_1 or LABEL_2 instead of -1, 0 or 1
+        #we had to change these to integers, they have to be integers to fit into chi-squared later
         v1 = df1.iloc[:, -1].values
-        if v1[0] != -1 and v1[0] !=0 and v1[0] !=0:
-            i = 0
+        if v1[0] != -1 and v1[0] !=0 and v1[0] !=1 and ('roberta' in name):
+            b = 0
             for v in v1:
                 if v == 'LABEL_0':
-                    v1[i] = int(-1)
+                    v1[b] = int(-1)
                 elif v == 'LABEL_1':
-                    v1[i] = int(0)
+                    v1[b] = int(0)
                 else:
-                    v1[i] = int(1)
-                i += 1
+                    v1[b] = int(1)
+                b += 1
+        
+        #issue in timelm not being the three integers but instead a dictionary.
+        if v1[0] != -1 and v1[0] !=0 and v1[0] !=1 and ('model' in name):
+            b = 0
+            for v in v1:
+                if 'negative' in v:
+                    v1[b] = int(-1)
+                elif 'neutral' in v:
+                    v1[b] = int(0)
+                elif 'positive'in v:
+                    v1[b] = int(1)
+                b += 1
+        
         #put into vector
         v2 = df2.iloc[:, -1].values
-        if v2[0] != -1 and v2[0] !=0 and v2[0] !=0:
-            i = 0
+        #same issue as earlier with premodels
+        if v2[0] != -1 and v2[0] !=0 and v2[0] !=1:
+            b = 0
             for v in v2:
                 if v == 'LABEL_0':
-                    v2[i] = int(-1)
+                    v2[b] = int(-1)
                 elif v == 'LABEL_1':
-                    v2[i] = int(0)
-                else:
-                    v2[i] = int(1)
-                i += 1
+                    v2[b] = int(0)
+                elif v == 'LABEL_2':
+                    v2[b] = int(1)
+                b += 1
         
-        
-        
-        
-        #Vectors, fix to be vectors containing our sentiment scores from different models
-        #np.random.seed(42)
-        #v1 = np.random.choice([-1, 0, 1], size=30000000)
-        #v2 = np.random.choice([-1, 0, 1], size=len(v1))
-        
-        
-        # Mann-Whitney U test
-        #statistic, p_value = mannwhitneyu(v1, v2)
-        
-        #print(f"Mann-Whitney U statistic: {statistic}")
-        #print(f"P-value: {p_value}")
-        
+             
         # chisquared test
         
+        #this is needed cause v2 last value when it is postmodel is nan
+        
+        v2 = np.delete(v2, len(v2)-1)
+        
         contingency_table = np.zeros((2, 3), dtype=int)
-        for i in range(len(v1)+len(v2)):
+        for a in range(len(v1)+len(v2)):
             
-            if i < len(v1):
+            if a < len(v1):
                 row = 0
-                col = v1[i]
+                col = v1[a]+1
             else:
                 row = 1
-                col = v2[i-len(v1)]
+                col = v2[a-len(v1)]+1
+            row = int(row)
+            col = int(col)
             contingency_table[row][col] += 1
         
         chi2, p_value, dof, expected = chi2_contingency(contingency_table)
         c.append(chi2)
         p.append(p_value)
         #print(f"Chi-square statistic: {chi2}")
-        #print(f"P-value: {p_value}")
-        i += 1
+        #print(f"P-value: {p_value}")       
 cposttimelm = c
 pposttimelm = p
