@@ -52,16 +52,11 @@ ppretimelm = []
 pposttimelm = []
 c = []
 p = []
-all_contingency_table = np.zeros((2, 3), dtype=int)
 
-#looping over the three chi-squared test we want to do
 for j in range(3):
-    #adds the first two models as filesm1 and filesm2
     if j == 0:
         filesm1 = filespre
         filesm2 = filespost
-    #first it removes the quarters that are not in timelm models as these only stretch for 11 quarters and not 20
-    #it also saves the c and p in a different name such that we can find these results
     elif j == 1:
         for g in range(8):
             filespre.remove(filespre[0])
@@ -81,7 +76,7 @@ for j in range(3):
         p = []
         filesm1 = filestimelm
         filesm2 = filespost
-    #loop that does the chi-squared test
+   #loop that does the chi-squared test
     for i,name in enumerate(filesm1):
         
         # load data of model 1
@@ -131,11 +126,9 @@ for j in range(3):
                     v2[b] = int(1)
                 b += 1
         
-             
         # chisquared test
-        
+                
         #this is needed cause v2 last value when it is postmodel is nan
-        
         v2 = np.delete(v2, len(v2)-1)
         
         contingency_table = np.zeros((2, 3), dtype=int)
@@ -150,11 +143,9 @@ for j in range(3):
             row = int(row)
             col = int(col)
             contingency_table[row][col] += 1
-        
+            
         chi2, p_value, dof, expected = chi2_contingency(contingency_table)
         c.append(chi2)
         p.append(p_value)
-        #print(f"Chi-square statistic: {chi2}")
-        #print(f"P-value: {p_value}")       
 cposttimelm = c
 pposttimelm = p
