@@ -134,6 +134,7 @@ dmypy.json
 *.csv
 *.bin
 *.json
+*.out
 
 # Personal Files
 Mvin_sandbox.ipynb
