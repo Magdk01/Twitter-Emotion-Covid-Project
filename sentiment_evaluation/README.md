@@ -1,1 +1,4 @@
-# I have to be redone
+# Sentiment analysis
+This folder contains the files to run sentiment evalution with different models. For the "time_lm_masterscript" all the hugging face time LM's are automatically evaluated.
+- Basic evaluation is a .ipynb script that can interact with the models and to basic evaluation on singular words or sentences.
+- Sentiment evaæ time lm is the main script, meant to itterate through all models and evaluate these on the train split of the data (the validation data can also be used, if the models were trained on the train data). The script runs the submit scripts in the "submit_scripts" folder and creates a file with ouput once it is done. It is recommended to run this with an HPC. 
