@@ -1,4 +1,4 @@
-# Zero shot evaluation
+# Word evaluation
 
 This folder contains the files to do a zero shot evaluation of a model.
 It contains a "sumbit_word.sh" script to control the hyperparameters fro the HPC and submit relevant scripts. 
