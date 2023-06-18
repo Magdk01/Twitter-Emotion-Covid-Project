@@ -20,7 +20,7 @@ module load cuda/11.7
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
 
-# NOTE: replace "FRANK" with name of venv
-source FRANK/bin/activate
+# NOTE: replace " twitter_venv" with name of venv
+source  twitter_venv/bin/activate
 
 python Finetuning_with_Parametersearch.py

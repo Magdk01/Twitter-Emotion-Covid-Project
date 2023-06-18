@@ -18,6 +18,6 @@
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
-source test-env/bin/activate
+source  twitter_venv/bin/activate
 
 python Quarterly_trainer.py "twitter-roberta-base-sep2020" "2020_Q3"  

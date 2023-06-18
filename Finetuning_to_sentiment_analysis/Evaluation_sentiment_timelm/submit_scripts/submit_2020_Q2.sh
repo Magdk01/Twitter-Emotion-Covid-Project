@@ -19,6 +19,6 @@ module load cuda/11.7
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
-source FRANK/bin/activate
+source  twitter_venv/bin/activate
 
 python "sentiment_eval_time_lm.py" "data/quarterly_data_2020_Q2" "sentiment/base_model_1"

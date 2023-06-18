@@ -18,6 +18,6 @@
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
-source test-env/bin/activate
+source  twitter_venv/bin/activate
 
 python sentiment_eval.py 0 1162338
