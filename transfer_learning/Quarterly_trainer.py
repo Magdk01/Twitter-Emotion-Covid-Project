@@ -69,7 +69,7 @@ if __name__ == "__main__":
     )
 
     
-    if conti_nue == "continue":
+    if conti_nue ==  :
         model = AutoModelForMaskedLM.from_pretrained(f'Train_{year_quarter}',local_files_only=True)
     else:
         model = AutoModelForMaskedLM.from_pretrained(model_checkpoint)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         report_to="wandb",
         run_name= f"{name_of_model}",
         # push_to_hub=True,
-        num_train_epochs = 20,
+        num_train_epochs = 30,
         per_device_train_batch_size  = 12,
         save_strategy="no"
     )
