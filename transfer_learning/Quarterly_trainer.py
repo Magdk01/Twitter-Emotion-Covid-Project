@@ -69,7 +69,7 @@ if __name__ == "__main__":
     )
 
     
-    if conti_nue ==  :
+    if conti_nue == "continue":
         model = AutoModelForMaskedLM.from_pretrained(f'Train_{year_quarter}',local_files_only=True)
     else:
         model = AutoModelForMaskedLM.from_pretrained(model_checkpoint)
