@@ -84,7 +84,7 @@ if __name__ == "__main__":
         report_to="wandb",
         run_name= f"{name_of_model}",
         # push_to_hub=True,
-        num_train_epochs = 20,
+        num_train_epochs = 30,
         per_device_train_batch_size  = 12,
         save_strategy="no"
     )

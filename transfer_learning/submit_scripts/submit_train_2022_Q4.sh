@@ -1,24 +1,23 @@
 #!/bin/sh
-#BSUB -J test
-#BSUB -o test%J.out
-#BSUB -e test%J.err
+#BSUB -J train_2022_Q4
+#BSUB -o train_2022_Q4_%J.out
+#BSUB -e train_2022_Q4_%J.err
 #BSUB -q gpuv100
-#BSUB -gpu "num=1"
+#BSUB -gpu "num=1:mode=exclusive_process"
 #BSUB -n 1
-#BSUB -R "rusage[mem=6GB]"
+#BSUB -R "rusage[mem=4GB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 02:00
+#BSUB -W 04:00
 #BSUB -N
 #BSUB -B
 # end of BSUB options
 
 # load a scipy module
 # replace VERSION and uncomment
-module load scipy/1.6.3-python-3.9.6
-module load cuda/11.7
+
 
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
 source  twitter_venv/bin/activate
 
-python "sentiment_eval_time_lm.py" "data/quarterly_data_2022_Q1" "sentiment/base_model_8"
+python Quarterly_trainer.py "twitter-roberta-base-2022-154m" "2022_Q4"  

@@ -7,7 +7,7 @@
 #BSUB -n 1
 #BSUB -R "rusage[mem=6GB]"
 #BSUB -R "span[hosts=1]"
-#BSUB -W 18:00
+#BSUB -W 02:00
 #BSUB -N
 #BSUB -B
 # end of BSUB options
@@ -20,7 +20,7 @@ module load cuda/11.7
 # activate the virtual environment
 # NOTE: needs to have been built with the same SciPy version above!
 
-# NOTE: replace "FRANK" with name of venv
-source FRANK/bin/activate
+# NOTE:  twitter_venv is the name of venv, replace with the name of ur venv
+source  twitter_venv/bin/activate
 
-python Finetuning_with_Parametersearch.py
+python Finetuning_without_parametersearch.py
