@@ -21,4 +21,4 @@ module load cuda/11.7
 # NOTE: needs to have been built with the same SciPy version above!
 source  twitter_venv/bin/activate
 
-python "word.py" "initial_keywords"
+python "Timelm_word_eval.py "evaluation_keywords"
